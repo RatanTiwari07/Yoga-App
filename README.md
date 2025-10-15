@@ -1,50 +1,191 @@
-# Welcome to your Expo app 👋
+# 🧘‍♀️ AI-Powered Yoga Instructor
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern, frontend-only React Native Android app that simulates an AI-driven yoga companion with pose detection, voice feedback, and progress tracking.
 
-## Get started
+## 📱 Features
 
-1. Install dependencies
+- **Mock Authentication**: Simple login/signup with local storage
+- **Dashboard**: View daily yoga poses and quick access to features
+- **Pose Detection Simulation**: Camera preview mockup with randomly generated accuracy scores
+- **Voice Feedback**: Text-to-speech prompts using expo-speech
+- **Leaderboard**: Track your ranking against other users
+- **Profile & Stats**: View session history, streaks, and achievements
+- **Smooth Animations**: Fade-in effects and pulse animations
 
+## 🛠️ Tech Stack
+
+- **React Native** (Expo)
+- **TypeScript**
+- **NativeWind** (Tailwind CSS for React Native)
+- **React Navigation** (Stack Navigator)
+- **AsyncStorage** (Local persistence)
+- **expo-speech** (Voice feedback)
+- **expo-linear-gradient** (Gradient backgrounds)
+
+## 📂 Project Structure
+
+```
+/src
+ ├── components/
+ │    ├── Button.tsx          # Reusable button component
+ │    ├── Card.tsx            # Reusable card component
+ │    ├── Input.tsx           # Reusable input component
+ ├── screens/
+ │    ├── LoginScreen.tsx     # Login/Signup screen
+ │    ├── DashboardScreen.tsx # Main dashboard
+ │    ├── PoseScreen.tsx      # Pose detection simulator
+ │    ├── LeaderboardScreen.tsx # Rankings
+ │    ├── ProfileScreen.tsx   # User profile & stats
+ ├── navigation/
+ │    ├── AppNavigator.tsx    # Navigation setup
+ ├── utils/
+ │    ├── mockData.ts         # Mock poses & leaderboard
+ │    ├── storage.ts          # AsyncStorage helpers
+ ├── App.tsx                   # Main app entry
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+- Expo CLI
+- Android Studio (for Android emulator) or physical Android device
+
+### Installation
+
+1. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+2. **Start the development server**:
    ```bash
-   npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
+3. **Run on Android**:
+   ```bash
+   npm run android
+   ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   Or scan the QR code with the Expo Go app on your Android device.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🎨 UI/UX Design
 
-## Get a fresh project
+- **Color Palette**: Calm blues, mint greens, and off-white
+- **Typography**: Bold headings in blue-800, gray-600 for subtexts
+- **Components**: Rounded cards and buttons with subtle shadows
+- **Animations**: Smooth fade-in transitions and pulse effects
 
-When you're ready, run:
+## 📝 Mock Data
 
+### Yoga Poses
+The app includes 10 pre-defined yoga poses:
+- Tree Pose
+- Downward Dog
+- Warrior I & II
+- Triangle Pose
+- Child's Pose
+- Cobra Pose
+- Plank Pose
+- Bridge Pose
+- Lotus Pose
+
+### Leaderboard
+Mock leaderboard with 10 users. Your user will be added dynamically.
+
+### Voice Feedback
+- Score > 80%: "Good posture!"
+- Score ≤ 80%: "Adjust your position slightly."
+
+## 📊 Local Storage
+
+The app uses AsyncStorage to persist:
+- User credentials (mock)
+- Session history
+- Streak count
+- Best score
+
+## 🎯 Key Features Explained
+
+### Login/Signup
+- Email validation
+- Password minimum length (6 characters)
+- Mock authentication (no real backend)
+- Stores user info locally
+
+### Dashboard
+- Welcome message with username
+- List of 10 yoga poses
+- Quick action buttons for sessions, leaderboard, and profile
+- Fade-in animation on mount
+
+### Pose Detection Screen
+- Camera preview mockup (no actual camera)
+- Randomly generated accuracy scores (60-100%)
+- Real-time voice feedback via expo-speech
+- Session timer
+- Ability to cycle through poses or end session
+
+### Leaderboard
+- Top 10 users (mock data)
+- Your ranking highlighted
+- Medal icons for top 3 (🥇🥈🥉)
+
+### Profile
+- Session statistics
+- Current streak
+- Best score
+- Recent session history
+- Achievement badges
+- Logout functionality
+
+## 🚫 Exclusions
+
+- ❌ No real backend or API
+- ❌ No actual camera integration
+- ❌ No real pose detection (Mediapipe)
+- ❌ No iOS or tablet optimization
+- ❌ No complex responsive design
+
+## 🎨 Styling
+
+All styling is done with **NativeWind** (Tailwind CSS):
+- Utility-first approach
+- Custom color extensions for mint palette
+- Consistent spacing and shadows
+- No external CSS files (except global.css for setup)
+
+## 📱 Android Only
+
+This app is optimized for Android devices in portrait mode. iOS compatibility is not guaranteed.
+
+## 🐛 Troubleshooting
+
+### Clear Cache
 ```bash
-npm run reset-project
+npx expo start -c
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Reset Project
+```bash
+npm install
+npx expo start -c
+```
 
-## Learn more
+### Android Build Issues
+Make sure you have Android Studio installed and properly configured.
 
-To learn more about developing your project with Expo, look at the following resources:
+## 📄 License
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+This is a frontend demo project for educational purposes.
 
-## Join the community
+## 🙏 Acknowledgments
 
-Join our community of developers creating universal apps.
+Built with ❤️ using React Native, Expo, and NativeWind.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+**Note**: This is a mock application without real AI or pose detection. All features are simulated for demonstration purposes.
