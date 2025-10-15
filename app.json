@@ -20,10 +20,17 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "package": "com.yogaapp.ai",
-      "permissions": ["CAMERA"]
+      "permissions": [
+        "CAMERA"
+      ]
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6eff33b7-0429-4792-82e1-5e5afdd665f3"
+      }
+    }
   }
 }

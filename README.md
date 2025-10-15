@@ -1,76 +1,147 @@
 # 🧘‍♀️ AI-Powered Yoga Instructor
 
-A modern, frontend-only React Native Android app that simulates an AI-driven yoga companion with pose detection, voice feedback, and progress tracking.
+A modern React Native Android app with **real-time pose detection**, AI-powered feedback, and comprehensive progress tracking for yoga practice.
 
-## 📱 Features
+## ✨ Features
 
-- **Mock Authentication**: Simple login/signup with local storage
-- **Dashboard**: View daily yoga poses and quick access to features
-- **Pose Detection Simulation**: Camera preview mockup with randomly generated accuracy scores
-- **Voice Feedback**: Text-to-speech prompts using expo-speech
-- **Leaderboard**: Track your ranking against other users
-- **Profile & Stats**: View session history, streaks, and achievements
-- **Smooth Animations**: Fade-in effects and pulse animations
+### Core Features
+- **Real-time Pose Detection**: Computer vision using TensorFlow Lite + MoveNet
+- **Skeleton Overlay**: Visual feedback with 17 keypoints and joint connections
+- **Joint Angle Calculations**: Precise measurements for 14 body joints
+- **Voice Feedback**: Real-time audio guidance using expo-speech
+- **Activity Heatmap**: GitHub-style 90-day practice visualization
+- **Progress Tracking**: Session history, streaks, achievements, and rankings
+
+### Pose Detection Capabilities
+- 17 body landmarks (nose, eyes, shoulders, elbows, wrists, hips, knees, ankles)
+- 14 calculated joint angles (elbows, knees, hips, shoulders, etc.)
+- Real-time pose comparison with reference poses
+- Temporal smoothing to reduce jitter
+- Confidence scoring and person detection
+- TypeScript API for data export
+
+### Two Modes
+1. **Mock Mode** (Expo Go): Simulated pose detection for testing UI/UX
+2. **Real Mode** (Dev Build): Actual computer vision with Vision Camera + TensorFlow
 
 ## 🛠️ Tech Stack
 
-- **React Native** (Expo)
-- **TypeScript**
-- **NativeWind** (Tailwind CSS for React Native)
-- **React Navigation** (Stack Navigator)
-- **AsyncStorage** (Local persistence)
-- **expo-speech** (Voice feedback)
-- **expo-linear-gradient** (Gradient backgrounds)
+### Frontend
+- **React Native** (~0.73) with Expo SDK ~54
+- **TypeScript** for type safety
+- **NativeWind** v4 (Tailwind CSS for React Native)
+- **React Navigation** v7 (Stack Navigator)
+
+### Pose Detection Stack
+- **react-native-vision-camera** v3 - Camera frame processing
+- **@shopify/react-native-skia** - Hardware-accelerated skeleton rendering
+- **@tensorflow/tfjs-react-native** - ML inference
+- **react-native-worklets-core** - Native-speed frame processors
+
+### Storage & Utils
+- **AsyncStorage** - Local data persistence
+- **expo-speech** - Text-to-speech feedback
+- **expo-linear-gradient** - UI gradients
 
 ## 📂 Project Structure
 
 ```
-/src
- ├── components/
- │    ├── Button.tsx          # Reusable button component
- │    ├── Card.tsx            # Reusable card component
- │    ├── Input.tsx           # Reusable input component
- ├── screens/
- │    ├── LoginScreen.tsx     # Login/Signup screen
- │    ├── DashboardScreen.tsx # Main dashboard
- │    ├── PoseScreen.tsx      # Pose detection simulator
- │    ├── LeaderboardScreen.tsx # Rankings
- │    ├── ProfileScreen.tsx   # User profile & stats
- ├── navigation/
- │    ├── AppNavigator.tsx    # Navigation setup
- ├── utils/
- │    ├── mockData.ts         # Mock poses & leaderboard
- │    ├── storage.ts          # AsyncStorage helpers
- ├── App.tsx                   # Main app entry
+Yoga-App/
+├── src/
+│   ├── components/
+│   │   ├── ActivityHeatmap.tsx     # 90-day practice heatmap
+│   │   ├── Button.tsx              # Reusable button component
+│   │   ├── Card.tsx                # Card container component
+│   │   ├── Input.tsx               # Form input component
+│   │   ├── PoseCamera.tsx          # Camera + pose detection wrapper
+│   │   └── SkeletonOverlay.tsx     # Skia-based skeleton rendering
+│   ├── screens/
+│   │   ├── LoginScreen.tsx         # Authentication screen
+│   │   ├── DashboardScreen.tsx     # Main dashboard with pose grid
+│   │   ├── PoseScreen.tsx          # Pose detection + session mgmt
+│   │   ├── LeaderboardScreen.tsx   # User rankings
+│   │   └── ProfileScreen.tsx       # Stats, heatmap, achievements
+│   ├── navigation/
+│   │   └── AppNavigator.tsx        # Stack navigator setup
+│   ├── types/
+│   │   └── poseTypes.ts            # Complete pose detection types
+│   └── utils/
+│       ├── mockData.ts             # 10 yoga poses + leaderboard
+│       ├── storage.ts              # AsyncStorage helpers
+│       ├── poseDetection.ts        # TensorFlow integration
+│       └── poseProcessing.ts       # Angle calc, smoothing, comparison
+├── assets/                          # Images and icons
+├── app.json                         # Expo configuration
+├── package.json                     # Dependencies
+├── tailwind.config.js              # NativeWind styling config
+├── README.md                        # This file
+├── DEV_BUILD_SETUP.md              # 🚀 Start here for pose detection!
+├── POSE_DETECTION_ARCHITECTURE.md  # Technical architecture docs
+├── PRODUCTION_BUILD_GUIDE.md       # Advanced setup guide
+├── API_REFERENCE.md                # Complete TypeScript API
+└── USAGE_GUIDE.md                  # Feature documentation
 ```
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Quick Start (Expo Go - Mock Mode Only)
 
-- Node.js (v16 or higher)
-- npm or yarn
-- Expo CLI
-- Android Studio (for Android emulator) or physical Android device
+```bash
+# Install dependencies
+npm install
 
-### Installation
+# Start development server
+npm start
 
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+# Press 'a' for Android or scan QR code
+```
 
-2. **Start the development server**:
-   ```bash
-   npm start
-   ```
+**Note**: This runs in **mock mode** with simulated pose detection. For real pose detection, see below.
 
-3. **Run on Android**:
-   ```bash
-   npm run android
-   ```
+---
 
-   Or scan the QR code with the Expo Go app on your Android device.
+### ⚠️ Getting Vision Camera Error?
+
+If you see:
+```
+react-native-vision-camera is not supported in Expo Go!
+```
+
+**Solution**: You need a development build for real pose detection.
+
+👉 **Follow the step-by-step guide**: [`DEV_BUILD_SETUP.md`](./DEV_BUILD_SETUP.md)
+
+**Quick version**:
+```bash
+# Install EAS CLI
+npm install -g eas-cli
+
+# Login to Expo
+eas login
+
+# Configure project
+eas build:configure
+
+# Create development build (~20 minutes)
+eas build --profile development --platform android
+
+# After installing APK on phone
+npx expo start --dev-client
+```
+
+---
+
+### Development Build vs Expo Go
+
+| Feature | Expo Go | Development Build |
+|---------|---------|-------------------|
+| **Setup** | Instant | ~20 min (one-time) |
+| **Pose Detection** | Mock only | Full computer vision |
+| **Vision Camera** | ❌ Not supported | ✅ Supported |
+| **TensorFlow** | ❌ Not supported | ✅ Supported |
+| **Use Case** | UI/UX testing | Production features |
+
+---
 
 ## 🎨 UI/UX Design
 

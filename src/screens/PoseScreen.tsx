@@ -4,6 +4,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as Speech from 'expo-speech';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import PoseCamera from '../components/PoseCamera';
 import {
   yogaPoses,
   generateAccuracyScore,
@@ -18,6 +19,7 @@ import {
   getUser,
 } from '../utils/storage';
 import type { Session, User } from '../utils/storage';
+import type { PoseData } from '../types/poseTypes';
 
 interface PoseScreenProps {
   navigation: any;
@@ -44,8 +46,38 @@ const PoseScreen: React.FC<PoseScreenProps> = ({ navigation, route }) => {
     setFacing(current => (current === 'front' ? 'back' : 'front'));
   };
 
+  /**
+   * Handle pose detection frame callback
+   */
+  const handlePoseFrame = (poseData: PoseData) => {
+    if (!isSessionActive) return;
+
+    // Calculate accuracy based on pose confidence
+    const confidence = Math.round(poseData.confidence * 100);
+    setAccuracyScore(confidence);
+
+    // Voice feedback based on confidence
+    if (Math.random() < 0.1) { // Reduce frequency to avoid spam
+      const feedback = getVoiceFeedback(confidence);
+      Speech.speak(feedback, {
+        language: 'en-US',
+        pitch: 1.0,
+        rate: 0.9,
+      });
+    }
+
+    // Log pose data for debugging/export
+    if (poseData.isPersonDetected) {
+      console.log('Pose detected:', {
+        confidence: poseData.confidence,
+        angles: poseData.angles,
+        visibleLandmarks: poseData.landmarks.filter(l => l.isVisible).length,
+      });
+    }
+  };
+
   useEffect(() => {
-    if (isSessionActive) {
+    if (isSessionActive && !useRealPoseDetection) {
       // Start pulse animation
       Animated.loop(
         Animated.sequence([
@@ -62,7 +94,7 @@ const PoseScreen: React.FC<PoseScreenProps> = ({ navigation, route }) => {
         ])
       ).start();
 
-      // Generate new accuracy score every 2 seconds
+      // Generate new accuracy score every 2 seconds (mock mode only)
       const scoreInterval = setInterval(() => {
         const newScore = generateAccuracyScore();
         setAccuracyScore(newScore);
@@ -92,8 +124,21 @@ const PoseScreen: React.FC<PoseScreenProps> = ({ navigation, route }) => {
         clearInterval(scoreInterval);
         clearInterval(timerInterval);
       };
+    } else if (isSessionActive && useRealPoseDetection) {
+      // Only timer in real detection mode (scores come from handlePoseFrame)
+      const timerInterval = setInterval(() => {
+        setTimer((prev) => prev + 1);
+      }, 1000);
+
+      Speech.speak(`Starting ${currentPose.name} with real-time detection`, {
+        language: 'en-US',
+      });
+
+      return () => {
+        clearInterval(timerInterval);
+      };
     }
-  }, [isSessionActive, currentPoseIndex]);
+  }, [isSessionActive, currentPoseIndex, useRealPoseDetection]);
 
   const startSession = () => {
     setIsSessionActive(true);
@@ -173,14 +218,30 @@ const PoseScreen: React.FC<PoseScreenProps> = ({ navigation, route }) => {
             </Text>
           </View>
 
-          {/* Camera Placeholder */}
+          {/* Camera View */}
           <View className="bg-gray-800 rounded-3xl aspect-[3/4] mb-6 overflow-hidden shadow-xl shadow-gray-400">
             {permission?.granted ? (
               <View className="flex-1 relative">
-                <CameraView 
-                  style={{ flex: 1 }}
-                  facing={facing}
-                />
+                {/* Choose between PoseCamera (real detection) or CameraView (mock) */}
+                {useRealPoseDetection ? (
+                  <PoseCamera
+                    facing={facing}
+                    useMockDetection={true} // Set to false in production build
+                    onPoseFrame={handlePoseFrame}
+                    config={{
+                      minConfidence: 0.5,
+                      targetFPS: 30,
+                      enableSmoothing: true,
+                      smoothingFactor: 0.3,
+                    }}
+                  />
+                ) : (
+                  <CameraView 
+                    style={{ flex: 1 }}
+                    facing={facing}
+                  />
+                )}
+                
                 {/* Camera Flip Button */}
                 <View style={{ position: 'absolute', top: 24, right: 24 }}>
                   <TouchableOpacity
